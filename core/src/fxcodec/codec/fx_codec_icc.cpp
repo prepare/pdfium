@@ -4,8 +4,8 @@
 
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
+#include "../../../../third_party/lcms2-2.6/include/lcms2.h"
 #include "../../../include/fxcodec/fx_codec.h"
-#include "../lcms2/fx_lcms2.h"
 #include "codec_int.h"
 
 const FX_DWORD N_COMPONENT_LAB = 3;
@@ -514,17 +514,13 @@ CCodec_IccModule::~CCodec_IccModule()
     CFX_IccProfileCache* pProfileCache;
     while (pos) {
         m_MapProfile.GetNextAssoc(pos, key, (void*&)pProfileCache);
-        if (pProfileCache) {
-            delete pProfileCache;
-        }
+        delete pProfileCache;
     }
     pos = m_MapTranform.GetStartPosition();
     CFX_IccTransformCache* pTransformCache;
     while (pos) {
         m_MapTranform.GetNextAssoc(pos, key, (void*&)pTransformCache);
-        if (pTransformCache) {
-            delete pTransformCache;
-        }
+        delete pTransformCache;
     }
 }
 void* CCodec_IccModule::CreateTransform_sRGB(const uint8_t* pProfileData, FX_DWORD dwProfileSize, int32_t& nComponents, int32_t intent, FX_DWORD dwSrcFormat)
