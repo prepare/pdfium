@@ -807,12 +807,13 @@ static GpPen* _GdipCreatePen(const CFX_GraphStateData* pGraphState, const CFX_Af
         }
         CallFunc(GdipSetPenDashArray)(pPen, pDashArray, nCount);
         FX_FLOAT phase = pGraphState->m_DashPhase;
-        if (bDashExtend)
+        if (bDashExtend) {
             if (phase < 0.5f) {
                 phase = 0;
             } else {
                 phase -= 0.5f;
             }
+        }
         CallFunc(GdipSetPenDashOffset)(pPen, phase);
         FX_Free(pDashArray);
         pDashArray = NULL;
@@ -935,7 +936,7 @@ BOOL CGdiplusExt::DrawPath(HDC hDC, const CFX_PathData* pPathData,
         if (!bSmooth && (fill_mode & 3)) {
             bSmooth = TRUE;
         }
-        if (bSmooth || pGraphState && pGraphState->m_LineWidth > 2) {
+        if (bSmooth || (pGraphState && pGraphState->m_LineWidth > 2)) {
             CallFunc(GdipSetSmoothingMode)(pGraphics, SmoothingModeAntiAlias);
         }
     }
