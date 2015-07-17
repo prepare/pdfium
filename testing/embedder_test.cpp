@@ -170,8 +170,8 @@ void EmbedderTest::SetUp() {
 void EmbedderTest::TearDown() {
   if (document_) {
     FORM_DoDocumentAAction(form_handle_, FPDFDOC_AACTION_WC);
-    FPDF_CloseDocument(document_);
     FPDFDOC_ExitFormFillEnvironment(form_handle_);
+    FPDF_CloseDocument(document_);
   }
   FPDFAvail_Destroy(avail_);
   FPDF_DestroyLibrary();
@@ -212,7 +212,7 @@ bool EmbedderTest::OpenDocument(const std::string& filename) {
 
   IPDF_JSPLATFORM* platform = static_cast<IPDF_JSPLATFORM*>(this);
   memset(platform, 0, sizeof(IPDF_JSPLATFORM));
-  platform->version = 1;
+  platform->version = 2;
   platform->app_alert = AlertTrampoline;
 
   FPDF_FORMFILLINFO* formfillinfo = static_cast<FPDF_FORMFILLINFO*>(this);

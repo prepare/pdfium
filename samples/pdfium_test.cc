@@ -426,7 +426,7 @@ void RenderPdf(const std::string& name, const char* pBuf, size_t len,
 
   IPDF_JSPLATFORM platform_callbacks;
   memset(&platform_callbacks, '\0', sizeof(platform_callbacks));
-  platform_callbacks.version = 1;
+  platform_callbacks.version = 2;
   platform_callbacks.app_alert = ExampleAppAlert;
   platform_callbacks.Doc_gotoPage = ExampleDocGotoPage;
 
@@ -550,8 +550,8 @@ void RenderPdf(const std::string& name, const char* pBuf, size_t len,
   }
 
   FORM_DoDocumentAAction(form, FPDFDOC_AACTION_WC);
-  FPDF_CloseDocument(doc);
   FPDFDOC_ExitFormFillEnvironment(form);
+  FPDF_CloseDocument(doc);
   FPDFAvail_Destroy(pdf_avail);
 
   fprintf(stderr, "Rendered %d pages.\n", rendered_pages);
