@@ -300,7 +300,7 @@ public:
     virtual void		Release() = 0;
 
     virtual	FX_BOOL		EnumFontList(CFX_FontMapper* pMapper) = 0;
-    virtual void*		MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* face, FX_BOOL& bExact) = 0;
+    virtual void*		MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* face, int& iExact) = 0;
     virtual void*		GetFont(const FX_CHAR* face) = 0;
     virtual FX_DWORD	GetFontData(void* hFont, FX_DWORD table, uint8_t* buffer, FX_DWORD size) = 0;
     virtual FX_BOOL		GetFaceName(void* hFont, CFX_ByteString& name) = 0;
@@ -322,15 +322,20 @@ class CFX_FolderFontInfo : public IFX_SystemFontInfo
 public:
     CFX_FolderFontInfo();
     virtual ~CFX_FolderFontInfo();
-    void				AddPath(const CFX_ByteStringC& path);
-    virtual void		Release();
-    virtual	FX_BOOL		EnumFontList(CFX_FontMapper* pMapper);
-    virtual void*		MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* face, FX_BOOL& bExact);
-    virtual void*		GetFont(const FX_CHAR* face);
-    virtual FX_DWORD	GetFontData(void* hFont, FX_DWORD table, uint8_t* buffer, FX_DWORD size);
-    virtual void		DeleteFont(void* hFont);
-    virtual	FX_BOOL		GetFaceName(void* hFont, CFX_ByteString& name);
-    virtual FX_BOOL		GetFontCharset(void* hFont, int& charset);
+    void AddPath(const CFX_ByteStringC& path);
+
+    // IFX_SytemFontInfo:
+    void Release() override;
+    FX_BOOL EnumFontList(CFX_FontMapper* pMapper) override;
+    void* MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family,
+                  const FX_CHAR* face, int& bExact) override;
+    void* GetFont(const FX_CHAR* face) override;
+    FX_DWORD GetFontData(void* hFont, FX_DWORD table,
+                         uint8_t* buffer, FX_DWORD size) override;
+    void DeleteFont(void* hFont) override;
+    FX_BOOL GetFaceName(void* hFont, CFX_ByteString& name) override;
+    FX_BOOL GetFontCharset(void* hFont, int& charset) override;
+
 protected:
     CFX_MapByteStringToPtr	m_FontList;
     CFX_ByteStringArray	m_PathList;
@@ -403,13 +408,6 @@ private:
     CFX_MapByteStringToPtr	m_SizeMap;
     CFX_MapPtrToPtr			m_PathMap;
     CFX_DIBitmap*           m_pBitmap;
-    void*                   m_pPlatformGraphics;
-    void*                   m_pPlatformBitmap;
-    void*                   m_hDC;
-    void*                   m_hBitmap;
-    void*                   m_hOldBitmap;
-    void*                   m_hGdiFont;
-    void*                   m_hOldGdiFont;
 
     void				    InitPlatform();
     void				    DestroyPlatform();

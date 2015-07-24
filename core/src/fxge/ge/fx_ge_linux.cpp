@@ -30,7 +30,7 @@ Base14Substs[] = {
 class CFX_LinuxFontInfo : public CFX_FolderFontInfo
 {
 public:
-    virtual void*		MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* family, FX_BOOL& bExact);
+    void* MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* family, int& iExact) override;
     FX_BOOL				ParseFontCfg();
     void*				FindFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* family, FX_BOOL bMatchName);
 };
@@ -63,29 +63,28 @@ static int32_t GetJapanesePreference(const FX_CHAR* facearr, int weight, int pic
     if (face.Find("Gothic") >= 0 || face.Find("\x83\x53\x83\x56\x83\x62\x83\x4e") >= 0) {
         if (face.Find("PGothic") >= 0 || face.Find("\x82\x6f\x83\x53\x83\x56\x83\x62\x83\x4e") >= 0) {
             return 0;
-        } else {
-            return 1;
         }
-    } else if (face.Find("Mincho") >= 0 || face.Find("\x96\xbe\x92\xa9") >= 0) {
+        return 1;
+    }
+    if (face.Find("Mincho") >= 0 || face.Find("\x96\xbe\x92\xa9") >= 0) {
         if (face.Find("PMincho") >= 0 || face.Find("\x82\x6f\x96\xbe\x92\xa9") >= 0) {
             return 2;
-        } else {
-            return 3;
         }
+        return 3;
     }
     if (!(picth_family & FXFONT_FF_ROMAN) && weight > 400) {
         return 0;
     }
     return 2;
 }
-void* CFX_LinuxFontInfo::MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* cstr_face, FX_BOOL& bExact)
+void* CFX_LinuxFontInfo::MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* cstr_face, int& iExact)
 {
     CFX_ByteString face = cstr_face;
     int iBaseFont;
     for (iBaseFont = 0; iBaseFont < 12; iBaseFont ++)
         if (face == CFX_ByteStringC(Base14Substs[iBaseFont].m_pName)) {
             face = Base14Substs[iBaseFont].m_pSubstName;
-            bExact = TRUE;
+            iExact = 1;
             break;
         }
     if (iBaseFont < 12) {

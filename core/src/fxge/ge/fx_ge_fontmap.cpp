@@ -592,8 +592,8 @@ void CFX_FontMapper::AddInstalledFont(const CFX_ByteString& name, int charset)
     if (bLocalized) {
         void* hFont = m_pFontInfo->GetFont(name);
         if (hFont == NULL) {
-            FX_BOOL bExact;
-            hFont = m_pFontInfo->MapFont(0, 0, FXFONT_DEFAULT_CHARSET, 0, name, bExact);
+            int iExact;
+            hFont = m_pFontInfo->MapFont(0, 0, FXFONT_DEFAULT_CHARSET, 0, name, iExact);
             if (hFont == NULL) {
                 return;
             }
@@ -688,7 +688,8 @@ uint8_t _GetCharsetFromCodePage(FX_WORD codepage)
         const CHARSET_MAP & cp = g_Codepage2CharsetTable[iMid];
         if (codepage == cp.codepage) {
             return cp.charset;
-        } else if (codepage < cp.codepage) {
+        }
+        if (codepage < cp.codepage) {
             iEnd = iMid - 1;
         } else {
             iStart = iMid + 1;
@@ -1044,7 +1045,7 @@ FXFT_Face CFX_FontMapper::FindSubstFont(const CFX_ByteString& name, FX_BOOL bTru
         bItalic = TRUE;
     }
     FX_BOOL bCJK = FALSE;
-    FX_BOOL bExact = FALSE;
+    int iExact = 0;
     int Charset = FXFONT_ANSI_CHARSET;
     if (WindowCP) {
         Charset = _GetCharsetFromCodePage(WindowCP);
@@ -1125,9 +1126,9 @@ FXFT_Face CFX_FontMapper::FindSubstFont(const CFX_ByteString& name, FX_BOOL bTru
             bItalic = TRUE;
         }
     }
-    bExact = !match.IsEmpty();
-    void* hFont = m_pFontInfo->MapFont(weight, bItalic, Charset, PitchFamily, family, bExact);
-    if (bExact) {
+    iExact = !match.IsEmpty();
+    void* hFont = m_pFontInfo->MapFont(weight, bItalic, Charset, PitchFamily, family, iExact);
+    if (iExact) {
         pSubstFont->m_SubstFlags |= FXFONT_SUBST_EXACT;
     }
     if (hFont == NULL) {
@@ -1159,14 +1160,10 @@ FXFT_Face CFX_FontMapper::FindSubstFont(const CFX_ByteString& name, FX_BOOL bTru
                     m_pFontMgr->GetStandardFont(pFontData, size, 12);
                     m_FoxitFaces[12] = m_pFontMgr->GetFixedFace(pFontData, size, 0);
                     return m_FoxitFaces[12];
-                } else {
-                    pSubstFont->m_SubstFlags |= FXFONT_SUBST_NONSYMBOL;
-                    return FindSubstFont(family, bTrueType, flags & ~FXFONT_SYMBOLIC, weight, italic_angle, 0, pSubstFont);
                 }
-#else
+#endif
                 pSubstFont->m_SubstFlags |= FXFONT_SUBST_NONSYMBOL;
                 return FindSubstFont(family, bTrueType, flags & ~FXFONT_SYMBOLIC, weight, italic_angle, 0, pSubstFont);
-#endif
             }
             if (Charset == FXFONT_ANSI_CHARSET) {
                 pSubstFont->m_SubstFlags |= FXFONT_SUBST_STANDARD;
@@ -1175,9 +1172,8 @@ FXFT_Face CFX_FontMapper::FindSubstFont(const CFX_ByteString& name, FX_BOOL bTru
             int index = m_CharsetArray.Find(Charset);
             if (index < 0) {
                 return UseInternalSubst(pSubstFont, iBaseFont, italic_angle, old_weight, PitchFamily);
-            } else {
-                hFont = m_pFontInfo->GetFont(m_FaceArray[index]);
             }
+            hFont = m_pFontInfo->GetFont(m_FaceArray[index]);
         }
     }
     pSubstFont->m_ExtHandle = m_pFontInfo->RetainFont(hFont);
@@ -1455,7 +1451,7 @@ void CFX_FolderFontInfo::ReportFace(CFX_ByteString& path, FXSYS_FILE* pFile, FX_
     }
     m_FontList.SetAt(facename, pInfo);
 }
-void* CFX_FolderFontInfo::MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* family, FX_BOOL& bExact)
+void* CFX_FolderFontInfo::MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, const FX_CHAR* family, int& iExact)
 {
     return NULL;
 }

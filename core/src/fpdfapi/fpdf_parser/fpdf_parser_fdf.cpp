@@ -62,7 +62,7 @@ void CFDF_Document::ParseStream(IFX_FileRead *pFile, FX_BOOL bOwnFile)
             if (word != FX_BSTRC("obj")) {
                 break;
             }
-            CPDF_Object* pObj = parser.GetObject(this, objnum, 0, FALSE);
+            CPDF_Object* pObj = parser.GetObject(this, objnum, 0, 0);
             if (pObj == NULL) {
                 break;
             }
@@ -181,10 +181,9 @@ CFX_WideString	FPDF_FileSpec_GetWin32Path(const CPDF_Object* pFileSpec)
         result += ':';
         result += ChangeSlash(wsFileName.c_str() + 2);
         return result;
-    } else {
-        CFX_WideString result;
-        result += '\\';
-        result += ChangeSlash(wsFileName.c_str());
-        return result;
     }
+    CFX_WideString result;
+    result += '\\';
+    result += ChangeSlash(wsFileName.c_str());
+    return result;
 }

@@ -7,14 +7,6 @@
 #ifndef CORE_SRC_FPDFTEXT_TEXT_INT_H_
 #define CORE_SRC_FPDFTEXT_TEXT_INT_H_
 
-class CPDF_TextParseOptions
-{
-public:
-    CPDF_TextParseOptions();
-    FX_BOOL			m_bCheckObjectOrder;
-    FX_BOOL			m_bCheckDirection;
-    int				m_nCheckSameObject;
-};
 class CPDF_TextPage;
 class CPDF_LinkExtract;
 class CPDF_TextPageFind;
@@ -74,7 +66,6 @@ public:
             FX_FLOAT yTorelance) const;
     virtual CFX_WideString			GetTextByRect(const CFX_FloatRect& rect) const;
     virtual void					GetRectsArrayByRect(const CFX_FloatRect& rect, CFX_RectArray& resRectArray) const;
-    virtual	int						GetOrderByDirection(int order, int direction) const;
     virtual	CFX_WideString			GetPageText(int start = 0, int nCount = -1) const;
 
     virtual int						CountRects(int start, int nCount);
@@ -95,7 +86,7 @@ public:
     static	FX_BOOL					IsLetter(FX_WCHAR unicode);
 private:
     FX_BOOL							IsHyphen(FX_WCHAR curChar);
-    FX_BOOL							IsControlChar(PAGECHAR_INFO* pCharInfo);
+    bool							IsControlChar(const PAGECHAR_INFO& charInfo);
     FX_BOOL							GetBaselineRotate(int start, int end, int& Rotate);
     void							ProcessObject();
     void							ProcessFormObject(CPDF_FormObject*	pFormObj, const CFX_AffineMatrix& formMatrix);

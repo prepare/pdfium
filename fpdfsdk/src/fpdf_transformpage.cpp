@@ -39,7 +39,7 @@ DLLEXPORT void STDCALL FPDFPage_SetCropBox(FPDF_PAGE page, float left, float bot
 }
 
 
-DLLEXPORT FX_BOOL STDCALL FPDFPage_GetMediaBox(FPDF_PAGE page, float* left, float* bottom, float* right, float* top)
+DLLEXPORT FPDF_BOOL STDCALL FPDFPage_GetMediaBox(FPDF_PAGE page, float* left, float* bottom, float* right, float* top)
 {
 	if(!page)
 		return FALSE;
@@ -211,8 +211,7 @@ DLLEXPORT FPDF_CLIPPATH STDCALL FPDF_CreateClipPath(float left, float bottom, fl
 
 DLLEXPORT void STDCALL FPDF_DestroyClipPath(FPDF_CLIPPATH clipPath)
 {
-	if(clipPath)
-		delete (CPDF_ClipPath*)clipPath;
+    delete (CPDF_ClipPath*)clipPath;
 }
 
 void OutputPath(CFX_ByteTextBuf& buf, CPDF_Path path)

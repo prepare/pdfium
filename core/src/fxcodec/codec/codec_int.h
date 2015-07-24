@@ -152,7 +152,7 @@ public:
     virtual void		Finish(void* pContext);
     virtual void		Input(void* pContext, const uint8_t* src_buf, FX_DWORD src_size);
     virtual int			ReadHeader(void* pContext, int* width, int* height, int* nComps);
-    virtual FX_BOOL		StartScanline(void* pContext, int down_scale);
+    virtual int			StartScanline(void* pContext, int down_scale);
     virtual FX_BOOL		ReadScanline(void* pContext, uint8_t* dest_buf);
     virtual FX_DWORD	GetAvailInput(void* pContext, uint8_t** avail_buf_ptr);
 protected:
@@ -244,7 +244,7 @@ class CCodec_Jbig2Context
 public:
     CCodec_Jbig2Context();
     ~CCodec_Jbig2Context() {};
-    IFX_FileRead* m_file_ptr;
+
     FX_DWORD m_width;
     FX_DWORD m_height;
     uint8_t* m_src_buf;
