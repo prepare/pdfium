@@ -78,8 +78,6 @@ class IFX_FileWrite : public IFX_StreamWrite {
     return WriteBlock(pData, GetSize(), size);
   }
 };
-IFX_FileWrite* FX_CreateFileWrite(const FX_CHAR* filename);
-IFX_FileWrite* FX_CreateFileWrite(const FX_WCHAR* filename);
 class IFX_StreamRead {
  public:
   virtual ~IFX_StreamRead() {}
@@ -101,12 +99,6 @@ class IFX_FileRead : IFX_StreamRead {
   virtual FX_BOOL IsEOF() { return FALSE; }
 
   virtual FX_FILESIZE GetPosition() { return 0; }
-
-  virtual FX_BOOL SetRange(FX_FILESIZE offset, FX_FILESIZE size) {
-    return FALSE;
-  }
-
-  virtual void ClearRange() {}
 
   virtual FX_BOOL ReadBlock(void* buffer, FX_FILESIZE offset, size_t size) = 0;
 
